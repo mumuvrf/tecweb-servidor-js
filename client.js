@@ -19,19 +19,19 @@ function build_answer(resposta, slug, token){
         .then((response) => response.data.sucesso);
 }
 
-async function soma(a, b, token){
+function soma(a, b, token){
     sum = a+b;
     result.resposta = sum;
     return build_answer(result, 'soma', token)
 }
 
-async function tamanhoString(string, token){
+function tamanhoString(string, token){
     tamanho = string.length;
     result.resposta = tamanho;
     return build_answer(result, 'tamanho-string', token);
 }
 
-async function nomeDoUsuario(email, token){
+function nomeDoUsuario(email, token){
     username = ''
     let ad_found = false;
     let i = 0;
@@ -47,7 +47,7 @@ async function nomeDoUsuario(email, token){
     return build_answer(result, 'nome-do-usuario', token);
 }
 
-async function jacaWars(v, theta, token){
+function jacaWars(v, theta, token){
     let d = Math.pow(v, 2)*Math.sin(2*Math.PI*theta/180)/9.8;
     let resposta = -1;
 
@@ -61,14 +61,14 @@ async function jacaWars(v, theta, token){
     return build_answer(result, 'jaca-wars', token);
 }
 
-async function anoBissexto(ano, token){
+function anoBissexto(ano, token){
     let ehBissexto = (ano%4 == 0) && (ano%100 != 0 || ano%400==0)
 
     result.resposta = ehBissexto;
     return build_answer(result, 'ano-bissexto', token);
 }
 
-async function volumeDaPizza(z, a, token){
+function volumeDaPizza(z, a, token){
     const pi = Math.PI;
     let volume = Math.round(pi*z*z*a);
 
@@ -76,14 +76,14 @@ async function volumeDaPizza(z, a, token){
     return build_answer(result, 'volume-da-pizza', token);
 }
 
-async function mru(s0, v, t, token){
+function mru(s0, v, t, token){
     let s = s0 + v*t;
 
     result.resposta = s;
     return build_answer(result, 'mru', token);
 }
 
-async function inverteString(string, token){
+function inverteString(string, token){
     invertexto = '';
     for(let i = string.length-1; i>=0; i--){
         invertexto += string[i];
@@ -93,7 +93,18 @@ async function inverteString(string, token){
     return build_answer(result, 'inverte-string', token);
 }
 
-async function nEsimoPrimo(n, token){
+function somaValores(objeto, token){
+    let values = Object.values(objeto);
+    let sum = 0;
+    for(let i=0; i<values.length; i++){
+        sum+=values[i];
+    }
+
+    result.resposta = sum;
+    return build_answer(result, 'soma-valores', token);
+}
+
+function nEsimoPrimo(n, token){
     let counter = 0;
     let i = 2;
     while(counter < n){
@@ -126,7 +137,7 @@ async function nEsimoPrimo(n, token){
     return build_answer(result, 'n-esimo-primo', token);
 }
 
-async function maiorPrefixoComum(strings, token){
+function maiorPrefixoComum(strings, token){
     let maiorPrefixo = '';
     for(let i=0; i<strings.length; i++){
         for(let j=i+1; j<strings.length; j++){
@@ -147,7 +158,7 @@ async function maiorPrefixoComum(strings, token){
     return build_answer(result, 'maior-prefixo-comum', token);
 }
 
-async function somaSegundoMaiorEMenorNumeros(numeros, token){
+function somaSegundoMaiorEMenorNumeros(numeros, token){
     let maior = 0;
     let segundoMaior = 0;
     let menor = numeros[0];
@@ -174,7 +185,28 @@ async function somaSegundoMaiorEMenorNumeros(numeros, token){
     return build_answer(result, 'soma-segundo-maior-e-menor-numeros', token);
 }
 
-async function somaDeStringsDeInts(strings, token){
+function contaPalindromos(palavras, token){
+    let palindromos = 0;
+    for(let i=0; i<palavras.length; i++){
+        let k=0;
+        let ehPalindromo = true;
+        let tamanho = palavras[i].length;
+        while(ehPalindromo && k < tamanho){
+            if(palavras[i][k] != palavras[i][tamanho-k-1]){
+                ehPalindromo = false;
+            }
+            k++;
+        }
+        if(ehPalindromo){
+            palindromos += 1;
+        }
+    }
+
+    result.resposta = palindromos;
+    return build_answer(result, 'conta-palindromos', token);
+}
+
+function somaDeStringsDeInts(strings, token){
     let numeros = strings.map((x) => parseInt(x));
     let resultado = numeros.reduce(
         (acc, cur) => acc+cur,
@@ -190,11 +222,13 @@ async function somaComRequisicoes(endpoints, token){
     config.headers["Authorization"] = `Bearer ${token}`;
 
     for(let i=0; i<endpoints.length; i++){
-        let value = await axios
+        let value = axios
             .get(endpoints[i], config)
             .then((response) => response.data);
         numeros.push(value);
     }
+
+    numeros = await Promise.all(numeros);
 
     let resultado = numeros.reduce(
         (acc, cur) => acc+cur,
@@ -240,12 +274,12 @@ async function main(){
     let ans_soma = await soma(exercicios.soma.entrada.a, exercicios.soma.entrada.b, token);
     console.log(ans_soma)
     console.log(soma && "OK" || "ERRO")
-    let ans_somaSegundoMaiorEMenorNumeros = await somaSegundoMaiorEMenorNumeros(exercicios['soma-segundo-maior-e-menor-numeros'].entrada.numeros, token);
-    console.log(ans_somaSegundoMaiorEMenorNumeros)
     let ans_tamanhoString = await tamanhoString(exercicios['tamanho-string'].entrada.string, token);
     console.log(ans_tamanhoString)
     let ans_nomeDoUsuario = await nomeDoUsuario(exercicios['nome-do-usuario'].entrada.email, token);
     console.log(ans_nomeDoUsuario)
+    let ans_jacaWars = await jacaWars(exercicios['jaca-wars'].entrada.v, exercicios['jaca-wars'].entrada.theta, token);
+    console.log(ans_jacaWars);
     let ans_anoBissexto = await anoBissexto(exercicios['ano-bissexto'].entrada.ano, token);
     console.log(ans_anoBissexto)
     let ans_volumeDaPizza = await volumeDaPizza(exercicios['volume-da-pizza'].entrada.z, exercicios['volume-da-pizza'].entrada.a,token);
@@ -254,18 +288,23 @@ async function main(){
     console.log(ans_mru);
     let ans_inverteString = await inverteString(exercicios['inverte-string'].entrada.string, token);
     console.log(ans_inverteString);
+    let ans_somaValores = await somaValores(exercicios['soma-valores'].entrada.objeto, token);
+    console.log(ans_somaValores);
     let ans_nEsimoPrimo = await nEsimoPrimo(exercicios['n-esimo-primo'].entrada.n, token);
     console.log(ans_nEsimoPrimo);
     let ans_maiorPrefixoComum = await maiorPrefixoComum(exercicios['maior-prefixo-comum'].entrada.strings, token);
     console.log(ans_maiorPrefixoComum);
+    let ans_somaSegundoMaiorEMenorNumeros = await somaSegundoMaiorEMenorNumeros(exercicios['soma-segundo-maior-e-menor-numeros'].entrada.numeros, token);
+    console.log(ans_somaSegundoMaiorEMenorNumeros)
+    let ans_contaPalindromos = await contaPalindromos(exercicios['conta-palindromos'].entrada.palavras, token);
+    console.log(ans_contaPalindromos);
     let ans_somaDeStringsDeInts = await somaDeStringsDeInts(exercicios['soma-de-strings-de-ints'].entrada.strings, token);
     console.log(ans_somaDeStringsDeInts);
-    // let ans_somaComRequisicoes = await somaComRequisicoes(exercicios['soma-com-requisicoes'].entrada.endpoints, token);
-    // console.log(ans_somaComRequisicoes);
-    let ans_cacaAoTesouro = await cacaAoTesouro(exercicios['caca-ao-tesouro'].entrada.inicio, token);
-    console.log(ans_cacaAoTesouro);
-    let ans_jacaWars = await jacaWars(exercicios['jaca-wars'].entrada.v, exercicios['jaca-wars'].entrada.theta, token);
-    console.log(ans_jacaWars);
+    let ans_somaComRequisicoes = await somaComRequisicoes(exercicios['soma-com-requisicoes'].entrada.endpoints, token);
+    console.log(ans_somaComRequisicoes);
+    // let ans_cacaAoTesouro = await cacaAoTesouro(exercicios['caca-ao-tesouro'].entrada.inicio, token);
+    // console.log(ans_cacaAoTesouro);
+    
 }
 
 main();
