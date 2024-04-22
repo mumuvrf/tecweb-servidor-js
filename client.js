@@ -270,41 +270,29 @@ async function main(){
     let token = await get_token();
     let exercicios = await get_exercicios(token);
     console.log(exercicios);
-    
-    let ans_soma = await soma(exercicios.soma.entrada.a, exercicios.soma.entrada.b, token);
-    console.log(ans_soma)
-    console.log(soma && "OK" || "ERRO")
-    let ans_tamanhoString = await tamanhoString(exercicios['tamanho-string'].entrada.string, token);
-    console.log(ans_tamanhoString)
-    let ans_nomeDoUsuario = await nomeDoUsuario(exercicios['nome-do-usuario'].entrada.email, token);
-    console.log(ans_nomeDoUsuario)
-    let ans_jacaWars = await jacaWars(exercicios['jaca-wars'].entrada.v, exercicios['jaca-wars'].entrada.theta, token);
-    console.log(ans_jacaWars);
-    let ans_anoBissexto = await anoBissexto(exercicios['ano-bissexto'].entrada.ano, token);
-    console.log(ans_anoBissexto)
-    let ans_volumeDaPizza = await volumeDaPizza(exercicios['volume-da-pizza'].entrada.z, exercicios['volume-da-pizza'].entrada.a,token);
-    console.log(ans_volumeDaPizza)
-    let ans_mru = await mru(exercicios.mru.entrada.s0, exercicios.mru.entrada.v, exercicios.mru.entrada.t, token);
-    console.log(ans_mru);
-    let ans_inverteString = await inverteString(exercicios['inverte-string'].entrada.string, token);
-    console.log(ans_inverteString);
-    let ans_somaValores = await somaValores(exercicios['soma-valores'].entrada.objeto, token);
-    console.log(ans_somaValores);
-    let ans_nEsimoPrimo = await nEsimoPrimo(exercicios['n-esimo-primo'].entrada.n, token);
-    console.log(ans_nEsimoPrimo);
-    let ans_maiorPrefixoComum = await maiorPrefixoComum(exercicios['maior-prefixo-comum'].entrada.strings, token);
-    console.log(ans_maiorPrefixoComum);
-    let ans_somaSegundoMaiorEMenorNumeros = await somaSegundoMaiorEMenorNumeros(exercicios['soma-segundo-maior-e-menor-numeros'].entrada.numeros, token);
-    console.log(ans_somaSegundoMaiorEMenorNumeros)
-    let ans_contaPalindromos = await contaPalindromos(exercicios['conta-palindromos'].entrada.palavras, token);
-    console.log(ans_contaPalindromos);
-    let ans_somaDeStringsDeInts = await somaDeStringsDeInts(exercicios['soma-de-strings-de-ints'].entrada.strings, token);
-    console.log(ans_somaDeStringsDeInts);
-    let ans_somaComRequisicoes = await somaComRequisicoes(exercicios['soma-com-requisicoes'].entrada.endpoints, token);
-    console.log(ans_somaComRequisicoes);
-    // let ans_cacaAoTesouro = await cacaAoTesouro(exercicios['caca-ao-tesouro'].entrada.inicio, token);
-    // console.log(ans_cacaAoTesouro);
-    
+
+    let funcoes = {
+        "soma": soma(exercicios.soma.entrada.a, exercicios.soma.entrada.b, token),
+        "tamanho-string": tamanhoString(exercicios['tamanho-string'].entrada.string, token),
+        "nome-do-usuario": nomeDoUsuario(exercicios['nome-do-usuario'].entrada.email, token),
+        "jaca-wars": jacaWars(exercicios['jaca-wars'].entrada.v, exercicios['jaca-wars'].entrada.theta, token),
+        "ano-bissexto": anoBissexto(exercicios['ano-bissexto'].entrada.ano, token),
+        "volume-da-pizza": volumeDaPizza(exercicios['volume-da-pizza'].entrada.z, exercicios['volume-da-pizza'].entrada.a,token),
+        "mru": mru(exercicios.mru.entrada.s0, exercicios.mru.entrada.v, exercicios.mru.entrada.t, token),
+        "inverte-string": inverteString(exercicios['inverte-string'].entrada.string, token),
+        "soma-valores": somaValores(exercicios['soma-valores'].entrada.objeto, token),
+        "n-esimo-primo": nEsimoPrimo(exercicios['n-esimo-primo'].entrada.n, token),
+        "maior-prefixo-comum": maiorPrefixoComum(exercicios['maior-prefixo-comum'].entrada.strings, token),
+        "soma-segundo-maior-e-menor-numeros": somaSegundoMaiorEMenorNumeros(exercicios['soma-segundo-maior-e-menor-numeros'].entrada.numeros, token),
+        "conta-palindromos": contaPalindromos(exercicios['conta-palindromos'].entrada.palavras, token),
+        "soma-de-strings-de-ints": somaDeStringsDeInts(exercicios['soma-de-strings-de-ints'].entrada.strings, token),
+        "soma-com-requisicoes": somaComRequisicoes(exercicios['soma-com-requisicoes'].entrada.endpoints, token),
+        "caca-ao-tesouro": cacaAoTesouro(exercicios['caca-ao-tesouro'].entrada.inicio, token),
+    }
+
+    let resposta = Object.values(funcoes);
+    resposta = await Promise.all(resposta);
+    console.log(resposta);
 }
 
 main();
